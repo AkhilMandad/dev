@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+<property resource="bootstrap.yml" />
+	<springProperty name="appName" source="spring.application.name"/>
+	<springProperty name="loglevel" source="logging.level.com.cvs.specialty"/>
+	<springProperty name="serverPort" source="server.port" />
+	
+	<property scope="context" name="LOG_HOME_CMNS" value="/appllogs/spoms/${appName}-${serverPort}.log"/>
+	<property scope="context" name="BACKUP_LOG_HOME_CMNS" value="/appllogs/spoms/backup/${appName}/%d{yyyy-MM-dd}%i.log-${serverPort}.zip"/>
+    
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender"> 
+         <encoder> 
+             <pattern>%d{ISO8601} %-5p [%c{3}] [%t] %m%n</pattern> 
+         </encoder> 
+     </appender> 
+
+     <appender name="APPLICATION" 
+         class="ch.qos.logback.core.rolling.RollingFileAppender"> 
+         <file>${LOG_HOME_CMNS}</file> 
+       
+         <rollingPolicy 
+             class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+         <fileNamePattern>${BACKUP_LOG_HOME_CMNS}</fileNamePattern> 
+        
+			 <maxHistory>7</maxHistory>
+			 <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                 <maxFileSize>500MB</maxFileSize>
+             </timeBasedFileNamingAndTriggeringPolicy>
+             <totalSizeCap>1GB</totalSizeCap>
+         </rollingPolicy> 
+
+         <encoder> 
+             <pattern>%d %-5p %m%n</pattern> 
+         </encoder> 
+     </appender> 
+
+	
+	 <logger name="com.cvs.specialty" level="${loglevel}" additivity="false">
+	 	 <appender-ref ref="CONSOLE" />
+		<appender-ref ref="APPLICATION"/>
+	</logger>
+
+	<root level="${loglevel}" >
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="APPLICATION"/>
+	</root>
+</included>

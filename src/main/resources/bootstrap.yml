@@ -1,0 +1,16 @@
+########## application port ####################
+server:
+  port: 9152
+############# application name ###############
+spring:
+  application:
+    name: speciality-externalize-configuration
+
+  cloud:
+    config:
+      enabled: false
+############ logging configuration ###############
+logging:
+  file: /appllogs/spoms/${spring.application.name}.log
+  level:
+    com.cvs.specialty: INFO
